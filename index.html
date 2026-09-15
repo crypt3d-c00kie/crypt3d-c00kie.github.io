@@ -1,0 +1,1367 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%9B%B0%EF%B8%8F%3C/text%3E%3C/svg%3E" />
+<title>Jachinn Paul</title>
+<meta name="description" content="Portfolio of Jachinn Paul, data engineer — medallion lakehouses and streaming pipelines that stay fast, cheap and reliable in production." />
+<meta name="author" content="Jachinn Paul" />
+<meta property="og:title" content="Jachinn Paul — Data Engineer" />
+<meta property="og:description" content="Medallion lakehouses and streaming pipelines that stay fast, cheap and reliable under production load." />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Hanken+Grotesk:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,320..560;1,6..72,340&family=JetBrains+Mono:wght@400;500&display=swap" />
+<script>document.documentElement.className = "js";</script>
+
+<style>
+  :root{
+    --paper:#EFF1ED; --surface:#FAFAF7; --surface-2:#E6E8E2;
+    --ink:#181A1E; --muted:#585C58; --faint:#8B8F89;
+    --hair:#D1D4CC; --hair-2:#DEE0D9;
+    --accent:#1B44FF; --accent-soft:rgba(27,68,255,.09); --signal:#DA3A22;
+    --bronze:#A9743F; --silver:#7E8896; --gold:#B98F35;
+    /* field palette — deeper than the diagram strokes so the hue survives low alpha on paper */
+    --f1:#8A4A20; --f2:#414D60; --f3:#A67C00; --f4:#1B44FF;
+    --vig:30%;
+    --lift:0 1px 0 rgba(255,255,255,.55), 0 18px 40px -26px rgba(24,26,20,.30);
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="day"]){
+      --paper:#0C0F16; --surface:#141824; --surface-2:#1B2030;
+      --ink:#E9EAE5; --muted:#9DA2AA; --faint:#6A707B;
+      --hair:#282E3A; --hair-2:#1C212C;
+      --accent:#6E8BFF; --accent-soft:rgba(110,139,255,.12); --signal:#FF5C46;
+      --bronze:#C88A5A; --silver:#AEB8C4; --gold:#E7B64B;
+      --f1:#C88A5A; --f2:#AEB8C4; --f3:#E7B64B; --f4:#6E8BFF;
+      --vig:72%;
+      --lift:inset 0 1px 0 rgba(140,165,255,.07), 0 22px 50px -30px rgba(0,0,0,.85);
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="night"]{
+    --paper:#0C0F16; --surface:#141824; --surface-2:#1B2030;
+    --ink:#E9EAE5; --muted:#9DA2AA; --faint:#6A707B;
+    --hair:#282E3A; --hair-2:#1C212C;
+    --accent:#6E8BFF; --accent-soft:rgba(110,139,255,.12); --signal:#FF5C46;
+    --bronze:#C88A5A; --silver:#AEB8C4; --gold:#E7B64B;
+    --f1:#C88A5A; --f2:#AEB8C4; --f3:#E7B64B; --f4:#6E8BFF;
+    --vig:72%;
+    --lift:inset 0 1px 0 rgba(140,165,255,.07), 0 22px 50px -30px rgba(0,0,0,.85);
+    color-scheme:dark;
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:"Hanken Grotesk", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    font-size:16px; line-height:1.55; -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    transition:background-color .6s ease, color .6s ease;
+  }
+  ::selection{ background:var(--accent); color:#fff; }
+  h1,h2,h3{ margin:0; font-family:"Bricolage Grotesque","Hanken Grotesk",sans-serif; font-weight:600; line-height:1.0; letter-spacing:-.02em; }
+  p{ margin:0; }
+  /* prose = a real reading face */
+  .prose{ font-family:"Newsreader", Georgia, "Times New Roman", serif; font-weight:380; }
+  a{ color:inherit; text-decoration:none; }
+  .mono{ font-family:"JetBrains Mono", ui-monospace, Menlo, monospace; }
+  :focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+
+  /* ---------------- loader ---------------- */
+  #loader{
+    position:fixed; inset:0; z-index:9999; background:var(--paper);
+    display:grid; place-items:center;
+    animation:loaderKill .01s linear 2.8s forwards;
+  }
+  #loader .lo{ display:flex; flex-direction:column; align-items:center; gap:16px; }
+  #loader .lo b{ font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.42em; text-transform:uppercase; color:var(--faint); }
+  #loader .lo i{ display:block; width:180px; height:1px; background:var(--hair); position:relative; overflow:hidden; }
+  #loader .lo i::after{
+    content:""; position:absolute; inset:0; background:var(--accent);
+    transform:scaleX(0); transform-origin:left;
+    animation:loaderBar 1.05s cubic-bezier(.6,0,.15,1) forwards;
+  }
+  #loader.done{ transform:translateY(-100%); transition:transform .62s cubic-bezier(.7,0,.15,1); }
+  @keyframes loaderBar{ to{ transform:scaleX(1); } }
+  @keyframes loaderKill{ to{ opacity:0; visibility:hidden; pointer-events:none; } }
+  @media (prefers-reduced-motion:reduce){ #loader{ display:none; } }
+
+  /* ---------------- WebGL backdrop ---------------- */
+  #gl{ position:fixed; inset:0; z-index:0; display:block; width:100%; height:100%; }
+  .vig{
+    position:fixed; inset:0; z-index:1; pointer-events:none;
+    background:radial-gradient(125% 95% at 50% 42%, transparent 42%, color-mix(in srgb, var(--paper) var(--vig), transparent) 100%);
+  }
+
+  /* ---------------- fixed chrome ---------------- */
+  .prog{ position:fixed; left:0; top:0; height:2px; width:0; background:var(--accent); z-index:60; }
+  .wm{
+    position:fixed; left:clamp(16px,4vw,42px); top:clamp(14px,3vh,30px); z-index:55;
+    font-family:"Bricolage Grotesque",sans-serif; font-weight:700; font-size:16px; letter-spacing:-.02em;
+    opacity:0; transform:translateY(-6px); transition:opacity .4s, transform .4s;
+  }
+  .wm.show{ opacity:1; transform:none; }
+  .hud-r{
+    position:fixed; right:clamp(16px,4vw,42px); top:clamp(12px,2.6vh,26px); z-index:55;
+    display:flex; align-items:center; gap:16px;
+  }
+  .chap{ font-family:"JetBrains Mono",monospace; font-size:11px; letter-spacing:.16em; color:var(--faint); }
+  .chap b{ color:var(--ink); }
+  .tbtn{
+    display:inline-flex; align-items:center; gap:7px; background:var(--surface);
+    border:1px solid var(--hair); color:var(--muted); cursor:pointer; border-radius:2px;
+    font-family:"JetBrains Mono",monospace; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase;
+    padding:6px 10px 6px 8px; transition:color .2s, border-color .2s, background-color .35s;
+  }
+  .tbtn:hover{ color:var(--ink); border-color:var(--accent); }
+  .tbtn svg{ width:13px; height:13px; }
+  @media (max-width:640px){ .hud-r .chap{ display:none; } }
+
+  .rail{ position:fixed; right:16px; top:50%; transform:translateY(-50%); z-index:55; display:flex; flex-direction:column; gap:9px; }
+  .rail button{ width:8px; height:8px; padding:0; border:0; border-radius:6px; background:var(--hair); cursor:pointer;
+    transition:height .25s, background-color .25s; }
+  .rail button:hover{ background:var(--muted); }
+  .rail button.on{ height:26px; background:var(--accent); }
+  @media (max-width:900px){ .rail{ display:none; } }
+
+  .playbtn{
+    position:fixed; left:50%; bottom:clamp(16px,3.4vh,30px); transform:translateX(-50%); z-index:56;
+    display:inline-flex; align-items:center; gap:9px;
+    background:var(--surface); border:1px solid var(--hair); color:var(--muted); cursor:pointer; border-radius:2px;
+    font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.16em; text-transform:uppercase;
+    padding:8px 14px 8px 11px; transition:color .2s, border-color .2s, background-color .35s;
+  }
+  .playbtn:hover, .playbtn.playing{ color:var(--ink); border-color:var(--accent); }
+  .playbtn svg{ width:12px; height:12px; fill:currentColor; }
+  .playbtn .pau{ display:none; }
+  .playbtn.playing .tri{ display:none; }
+  .playbtn.playing .pau{ display:block; }
+
+  /* ---------------- layout ---------------- */
+  main{ position:relative; z-index:10; }
+  .sec{ position:relative; padding:0 clamp(20px,7vw,120px); }
+  .pin{ position:relative; }
+  .hold{ min-height:100svh; display:flex; flex-direction:column; justify-content:center; }
+  .inner{ width:100%; max-width:1180px; margin:0 auto; position:relative; z-index:1; }
+  .ghost{
+    position:absolute; right:clamp(4px,2.5vw,60px); bottom:5vh; z-index:0; pointer-events:none;
+    font-family:"Bricolage Grotesque",sans-serif; font-weight:800;
+    font-size:clamp(8rem,32vh,20rem); line-height:.78; letter-spacing:-.06em;
+    color:var(--ink); opacity:.04; user-select:none;
+  }
+  @media (max-width:760px){ .ghost{ font-size:clamp(6rem,22vh,12rem); opacity:.03; } }
+
+  /* chapter seam — an authored line between chapters */
+  .seam{
+    position:absolute; top:0; left:0; right:0; z-index:2; pointer-events:none;
+    display:flex; align-items:center; gap:16px;
+    padding-inline:clamp(16px,3.4vw,56px); padding-top:clamp(18px,4vh,44px);
+  }
+  .seam b{
+    font-family:"JetBrains Mono",monospace; font-weight:400; font-size:9.5px;
+    letter-spacing:.22em; text-transform:uppercase; color:var(--faint); white-space:nowrap;
+  }
+  .seam i{ flex:1; height:1px; background:var(--hair); transform-origin:left; }
+  .js .seam i{ transform:scaleX(0); }
+  .js .seam b{ opacity:0; }
+
+  /* panels lift off the field */
+  .rcard, .bcard, .specsheet, .lk-notes, #impact .lead2, #impact .rest, pre.code{ box-shadow:var(--lift); }
+  .plabel{
+    font-family:"JetBrains Mono",monospace; font-size:11px; letter-spacing:.24em; text-transform:uppercase;
+    color:var(--accent); display:flex; align-items:center; gap:12px; margin-bottom:24px;
+  }
+  .plabel::before{ content:""; width:30px; height:1px; background:linear-gradient(90deg,var(--accent),transparent); }
+  .plabel .of{ color:var(--faint); }
+  .shead{
+    font-family:"Bricolage Grotesque",sans-serif; font-weight:600;
+    font-size:clamp(1.6rem,3.6vw,2.6rem); letter-spacing:-.025em; line-height:1.05;
+    margin:-6px 0 36px; max-width:18ch;
+  }
+
+  .js [data-anim]{ opacity:0; }
+  .js [data-anim="up"]{ transform:translateY(24px); }
+
+  /* ---------------- HERO ---------------- */
+  #hero{ min-height:100svh; display:flex; align-items:center; padding:14vh clamp(16px,3.4vw,56px); }
+  #hero .inner{ max-width:1440px; }
+  #hero .heroTop{ display:grid; grid-template-columns:auto 1fr; align-items:end; gap:clamp(20px,4vw,76px); }
+  #hero .big{
+    font-family:"Bricolage Grotesque",sans-serif; font-weight:700;
+    font-size:clamp(3rem,12.5vw,12rem); line-height:.86; letter-spacing:-.055em;
+  }
+  #hero .row{ display:block; overflow:hidden; padding-top:.06em; margin-top:-.06em; }
+  #hero .row span{ display:inline-block; }
+  #hero .ntext{ padding-bottom:clamp(6px,1.8vh,26px); }
+  #hero .sub{
+    font-family:"Newsreader", Georgia, serif; font-weight:380;
+    font-size:clamp(1.1rem,2.1vw,1.6rem); color:var(--muted); max-width:36ch; line-height:1.45;
+  }
+  @media (max-width:1040px){
+    #hero .heroTop{ grid-template-columns:1fr; align-items:start; gap:26px; }
+    #hero .ntext{ padding-bottom:0; }
+  }
+  #hero .sub b{ color:var(--ink); font-weight:560; }
+  #hero .herometa{
+    margin-top:28px; display:flex; flex-wrap:wrap; align-items:center; gap:9px;
+    font-family:"JetBrains Mono",monospace; font-size:11px; letter-spacing:.13em;
+    text-transform:uppercase; color:var(--faint);
+  }
+  #hero .herometa .dot{ color:var(--hair); }
+  .cue{
+    position:absolute; left:clamp(16px,3.4vw,56px); bottom:26px; z-index:2;
+    font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--faint);
+    display:flex; align-items:center; gap:10px;
+  }
+  .cue i{ width:1px; height:34px; background:var(--faint); position:relative; overflow:hidden; }
+  .cue i::after{ content:""; position:absolute; inset:0; background:var(--accent); transform:translateY(-100%); animation:drip 1.9s ease-in-out infinite; }
+  @keyframes drip{ 0%{ transform:translateY(-100%) } 60%,100%{ transform:translateY(100%) } }
+
+  /* ---------------- STATEMENT ---------------- */
+  #statement{ padding-inline:clamp(16px,3.4vw,56px); }
+  #statement .inner{ max-width:1440px; }
+  #statement .line{
+    font-family:"Newsreader", Georgia, serif; font-weight:340;
+    font-size:clamp(2rem,6.4vw,5.6rem); line-height:1.08; letter-spacing:-.018em; max-width:none;
+  }
+  #statement .w{ display:inline-block; margin-right:.22em; }
+  #statement .w.em{ color:var(--accent); font-style:italic; position:relative; }
+  #statement .w.em::after{
+    content:""; position:absolute; left:0; right:0; bottom:.02em; height:.1em; background:var(--signal);
+    transform:scaleX(0); transform-origin:left;
+  }
+
+  /* ---------------- LAKEHOUSE ---------------- */
+  #lake{ padding-inline:clamp(16px,3.4vw,56px); }
+  #lake .inner{ max-width:1420px; }
+  #lake .pin{ min-height:100svh; display:flex; flex-direction:column; justify-content:center; }
+  #lake .shead{ margin-bottom:20px; font-size:clamp(1.4rem,3vw,2rem); }
+  /* the schematic floats directly on the field — no box */
+  .schem{
+    width:100%; border:0; padding:clamp(10px,1.6vw,22px) 0;
+    background:radial-gradient(80% 120% at 50% 50%, color-mix(in srgb, var(--paper) 74%, transparent), transparent 78%);
+  }
+  .schem svg{ display:block; width:100%; height:auto; max-height:58vh; margin-inline:auto; }
+  .lk-notes{ display:grid; grid-template-columns:repeat(3,1fr); border:1px solid var(--hair); }
+  .lk-notes{ margin-top:16px; background:color-mix(in srgb, var(--surface) 70%, transparent); backdrop-filter:blur(4px); }
+  .lk-notes .n{ padding:15px 18px; border-right:1px solid var(--hair); }
+  .lk-notes .n:last-child{ border-right:0; }
+  .lk-notes .n .t{ font-family:"JetBrains Mono",monospace; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin-bottom:7px; }
+  .lk-notes .n p{ font-family:"Newsreader", Georgia, serif; font-weight:380; font-size:14px; line-height:1.5; color:var(--muted); }
+  @media (max-width:760px){ .lk-notes{ grid-template-columns:1fr; } .lk-notes .n{ border-right:0; border-bottom:1px solid var(--hair); } }
+
+  /* ---------------- DECISIONS ---------------- */
+  #decisions .inner{ padding-block:clamp(80px,13vh,150px); }
+  #decisions > .inner > .plabel{ margin-bottom:16px; }
+  .dgrid{ display:grid; grid-template-columns:260px 1fr; gap:clamp(28px,5vw,64px); align-items:start; }
+  .dside{ position:sticky; top:16vh; }
+  .dside svg{ display:block; width:100%; max-width:230px; height:auto; }
+  .dside .dhint{ font-family:"JetBrains Mono",monospace; font-size:9.5px; letter-spacing:.1em; color:var(--faint); margin-top:14px; text-transform:uppercase; max-width:200px; line-height:1.5; }
+  #miniPipe .st circle{ fill:var(--faint); transition:fill .3s, r .3s; }
+  #miniPipe .st text{ fill:var(--muted); transition:fill .3s; font-weight:400; }
+  #miniPipe[data-active="src"] .st-src circle,
+  #miniPipe[data-active="bronze"] .st-bronze circle,
+  #miniPipe[data-active="silver"] .st-silver circle,
+  #miniPipe[data-active="gold"] .st-gold circle,
+  #miniPipe[data-active="serve"] .st-serve circle{ fill:var(--accent); r:6.5; }
+  #miniPipe[data-active="src"] .st-src text,
+  #miniPipe[data-active="bronze"] .st-bronze text,
+  #miniPipe[data-active="silver"] .st-silver text,
+  #miniPipe[data-active="gold"] .st-gold text,
+  #miniPipe[data-active="serve"] .st-serve text{ fill:var(--ink); font-weight:700; }
+  #miniPipe[data-active="quality"] .spine{ stroke:var(--accent); }
+  #miniPipe[data-active="quality"] .st circle{ fill:var(--accent); }
+
+  .dlist{ position:relative; padding-left:26px; }
+  .dlist::before{ content:""; position:absolute; left:4px; top:6px; bottom:6px; width:1px; background:var(--hair); }
+  .dentry{ position:relative; padding:30px 0; border-top:1px solid var(--hair); }
+  .dentry::before{
+    content:""; position:absolute; left:-26px; top:34px; width:9px; height:9px; border-radius:50%;
+    background:var(--paper); border:2px solid var(--hair); transition:border-color .3s, background-color .3s;
+  }
+  .dentry.active::before{ border-color:var(--accent); background:var(--accent); }
+  .dstage{ font-family:"JetBrains Mono",monospace; font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); }
+  .dentry h3{ font-size:clamp(1.25rem,2.7vw,1.8rem); margin:10px 0 20px; letter-spacing:-.02em; }
+  .dquad{ display:grid; grid-template-columns:1fr 1fr; gap:18px 30px; }
+  .dquad > div b{ display:block; font-family:"JetBrains Mono",monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--faint); margin-bottom:6px; }
+  .dquad > div p{ font-family:"Newsreader", Georgia, serif; font-weight:380; font-size:15px; line-height:1.5; color:var(--muted); }
+  .dquad > div.trade p{ color:var(--ink); }
+  pre.code{
+    margin:18px 0 0; padding:14px 16px; border:1px solid var(--hair); background:var(--surface-2);
+    overflow-x:auto; font-family:"JetBrains Mono",monospace; font-size:11.5px; line-height:1.65; color:var(--ink);
+  }
+  pre.code code{ white-space:pre; display:block; }
+  .hljs-keyword,.hljs-selector-tag,.hljs-built_in{ color:var(--accent); }
+  .hljs-string,.hljs-symbol,.hljs-bullet,.hljs-regexp{ color:var(--signal); }
+  .hljs-comment,.hljs-quote{ color:var(--faint); font-style:italic; }
+  .hljs-number,.hljs-literal{ color:var(--bronze); }
+  .hljs-attr,.hljs-name,.hljs-title,.hljs-title.function_,.hljs-property{ color:var(--ink); font-weight:600; }
+  .hljs-meta{ color:var(--faint); }
+  @media (max-width:860px){
+    .dgrid{ grid-template-columns:1fr; }
+    .dside{ position:static; }
+    #miniPipe{ display:none; }
+    .dquad{ grid-template-columns:1fr; }
+  }
+
+  /* ---------------- RECORD ---------------- */
+  #record .pin{ height:100svh; display:flex; align-items:center; overflow:hidden; }
+  #record .track{ display:flex; gap:26px; padding-left:clamp(20px,7vw,120px); will-change:transform; }
+  .rcard{
+    flex:0 0 min(78vw, 420px); border:1px solid var(--hair); border-left:3px solid var(--hair);
+    background:color-mix(in srgb, var(--surface) 78%, transparent); backdrop-filter:blur(3px);
+    padding:26px 24px; display:flex; flex-direction:column; gap:12px; min-height:60vh;
+  }
+  /* era palette: the further back, the more raw */
+  .rcard:nth-child(1){ border-left-color:var(--accent); }
+  .rcard:nth-child(2){ border-left-color:var(--gold); }
+  .rcard:nth-child(3){ border-left-color:var(--silver); }
+  .rcard:nth-child(4){ border-left-color:var(--bronze); }
+  .rcard .co{ font-family:"Bricolage Grotesque",sans-serif; font-weight:700; font-size:1.4rem; }
+  .rcard .rt{ font-size:13px; color:var(--muted); }
+  .rcard .dt{ font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.08em; color:var(--faint); }
+  .rcard .big{ font-family:"Bricolage Grotesque",sans-serif; font-weight:700; font-size:clamp(1.8rem,4vw,2.6rem); letter-spacing:-.02em; margin-top:auto; }
+  .rcard .big .s{ color:var(--signal); }
+  .rcard ul{ margin:0; padding-left:16px; display:flex; flex-direction:column; gap:6px; }
+  .rcard li{ font-size:12.5px; color:var(--muted); }
+  #record .cap{ position:absolute; left:clamp(20px,7vw,120px); top:14vh; }
+
+  /* ---------------- IMPACT ---------------- */
+  #impact .lead2{ display:grid; grid-template-columns:1fr 1fr; border:1px solid var(--hair); }
+  #impact .lead2 > div{ padding:clamp(24px,4vw,42px) clamp(20px,3vw,36px); }
+  #impact .lead2 > div:first-child{ border-right:1px solid var(--hair); }
+  #impact .lead2 .v{ font-family:"Bricolage Grotesque",sans-serif; font-weight:700; font-size:clamp(3.2rem,10.5vw,7.8rem); letter-spacing:-.05em; line-height:.86; }
+  #impact .lead2 .v .s{ color:var(--signal); font-weight:600; }
+  #impact .lead2 .v .u{ font-size:.34em; letter-spacing:0; color:var(--faint); }
+  #impact .lead2 .k{ font-family:"Newsreader",Georgia,serif; font-weight:380; font-size:15.5px; line-height:1.5; color:var(--muted); margin-top:22px; max-width:34ch; }
+  #impact .lead2 .src{ font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.12em; color:var(--faint); margin-top:14px; }
+  #impact .rest{ display:grid; grid-template-columns:repeat(3,1fr); border-left:1px solid var(--hair); border-top:1px solid var(--hair); }
+  #impact .rest .c{ border-right:1px solid var(--hair); border-bottom:1px solid var(--hair); padding:24px 20px; }
+  #impact .rest .v{ font-family:"Bricolage Grotesque",sans-serif; font-weight:700; font-size:clamp(1.5rem,3.6vw,2.1rem); letter-spacing:-.025em; line-height:1; }
+  #impact .rest .v .s{ color:var(--signal); font-weight:600; }
+  #impact .rest .bar{ display:block; height:3px; background:var(--hair-2); margin:13px 0 11px; position:relative; overflow:hidden; }
+  #impact .rest .bar b{ position:absolute; left:0; top:0; bottom:0; width:0; background:var(--accent); }
+  #impact .rest .c.in .bar b{ width:var(--p); transition:width .9s cubic-bezier(.2,.7,.2,1); }
+  #impact .rest .k{ font-size:12px; color:var(--muted); line-height:1.4; }
+  #impact .rest .v + .k{ margin-top:13px; }
+  #impact .rest .src{ font-family:"JetBrains Mono",monospace; font-size:9.5px; letter-spacing:.1em; color:var(--faint); margin-top:11px; }
+  #impact .note{ font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.05em; color:var(--faint); margin-top:20px; }
+  @media (max-width:820px){
+    #impact .lead2{ grid-template-columns:1fr; }
+    #impact .lead2 > div:first-child{ border-right:0; border-bottom:1px solid var(--hair); }
+    #impact .rest{ grid-template-columns:repeat(2,1fr); }
+  }
+  @media (max-width:440px){ #impact .rest{ grid-template-columns:1fr; } }
+
+  /* ---------------- BUILDS ---------------- */
+  #builds .two{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .bcard{ border:1px solid var(--hair); background:color-mix(in srgb, var(--surface) 78%, transparent); backdrop-filter:blur(3px); padding:22px; }
+  .bcard h3{ font-size:1.1rem; }
+  .bcard .tg{ font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.05em; color:var(--accent); margin-top:6px; }
+  .bcard svg{ display:block; width:100%; height:70px; margin:14px 0; overflow:visible; }
+  .bcard p{ font-family:"Newsreader", Georgia, serif; font-weight:380; font-size:14px; line-height:1.5; color:var(--muted); }
+  .bcard pre.code{ font-size:10.5px; }
+  .bcard .kpi{ font-family:"JetBrains Mono",monospace; font-size:12px; margin-top:12px; border-top:1px solid var(--hair); padding-top:10px; }
+  .bcard .kpi b{ color:var(--signal); }
+  @media (max-width:760px){ #builds .two{ grid-template-columns:1fr; } }
+
+  /* ---------------- STACK ---------------- */
+  #stack .m{ border-top:1px solid var(--hair); }
+  #stack .g{ display:grid; grid-template-columns:200px 1fr; gap:18px; padding:14px 0; border-bottom:1px solid var(--hair); }
+  #stack .g .gt{ font-family:"JetBrains Mono",monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--faint); }
+  #stack .g .it{ display:flex; flex-wrap:wrap; gap:6px 16px; }
+  #stack .g .it span{ font-size:13px; color:var(--ink); position:relative; }
+  #stack .g .it span::after{ content:""; position:absolute; left:0; right:0; bottom:-2px; height:1px; background:var(--accent); transform:scaleX(0); transform-origin:left; transition:transform .2s; }
+  #stack .g .it span:hover{ color:var(--accent); }
+  #stack .g .it span:hover::after{ transform:scaleX(1); }
+  @media (max-width:720px){ #stack .g{ grid-template-columns:1fr; gap:8px; } }
+
+  /* ---------------- CONTACT (final page) ---------------- */
+  #contact .big{
+    font-family:"Bricolage Grotesque",sans-serif; font-weight:700;
+    font-size:clamp(2.4rem,8vw,5.8rem); line-height:.9; letter-spacing:-.035em;
+  }
+  #contact .big .s{ color:var(--signal); }
+  #contact .cl{ display:inline-block; }
+  #contact .cgrid{
+    display:grid; grid-template-columns:1fr 1.2fr; gap:clamp(28px,6vw,72px);
+    align-items:start; margin-top:clamp(30px,6vh,56px);
+  }
+  #contact .lines a, #contact .lines .l{
+    display:grid; grid-template-columns:88px 1fr; gap:14px; padding:12px 0; border-bottom:1px solid var(--hair);
+    font-size:14px; align-items:baseline;
+  }
+  #contact .lines a:first-child, #contact .lines .l:first-child{ border-top:1px solid var(--hair); }
+  #contact .lines .k{ font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--faint); }
+  #contact .lines a:hover .v{ color:var(--accent); }
+
+  .specsheet{
+    border:1px solid var(--hair); background:color-mix(in srgb, var(--surface) 68%, transparent); backdrop-filter:blur(4px);
+  }
+  .specsheet .st{ font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--faint); padding:14px 20px 6px; }
+  .specsheet .fr{
+    display:grid; grid-template-columns:70px 1fr; gap:18px; padding:12px 20px; border-top:1px solid var(--hair-2); font-size:13.5px; align-items:baseline;
+  }
+  .specsheet .fr .k{ font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--faint); }
+  .specsheet .fr .v{ color:var(--ink); line-height:1.45; }
+  .specsheet .fr .v a{ color:var(--accent); }
+  .specsheet .fr .v a:hover{ text-decoration:underline; }
+  @media (max-width:820px){ #contact .cgrid{ grid-template-columns:1fr; } }
+
+  .foot{
+    position:relative; z-index:10; border-top:1px solid var(--hair);
+    padding:20px clamp(20px,7vw,120px) 28px;
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
+    font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--faint);
+    background:color-mix(in srgb, var(--surface) 55%, transparent); backdrop-filter:blur(4px);
+  }
+  .foot a:hover{ color:var(--accent); }
+
+  @media (prefers-reduced-motion:reduce){
+    html{ scroll-behavior:auto; }
+    .js [data-anim]{ opacity:1 !important; transform:none !important; }
+    .js .seam i{ transform:none; }
+    .js .seam b{ opacity:1; }
+    .cue i::after{ animation:none; }
+  }
+</style>
+<style>[hidden]{display:none!important}</style>
+</head>
+<body>
+
+<div id="loader"><div class="lo"><b>Jachinn&nbsp;Paul</b><i></i></div></div>
+
+<canvas id="gl"></canvas>
+<div class="vig"></div>
+
+<div class="prog" id="prog"></div>
+<a class="wm" id="wm" href="#hero">Jachinn Paul</a>
+<div class="hud-r">
+  <button class="tbtn" id="themeBtn" aria-label="Switch day / night">
+    <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"></svg>
+    <span id="themeLabel">Night</span>
+  </button>
+</div>
+<div class="rail" id="rail" aria-label="Section navigation"></div>
+<button class="playbtn" id="playbtn" aria-label="Play a slow guided scroll through the page">
+  <svg viewBox="0 0 20 20" aria-hidden="true">
+    <polygon class="tri" points="6,4 16,10 6,16"></polygon>
+    <g class="pau"><rect x="5" y="4" width="3.4" height="12"></rect><rect x="11.6" y="4" width="3.4" height="12"></rect></g>
+  </svg>
+  <span id="playlbl">Play tour</span>
+</button>
+
+<main>
+  <!-- 00 -->
+  <section class="sec" id="hero" data-chap="00" data-title="Title">
+    <div class="inner">
+      <div class="plabel" data-anim="up">Portfolio <span class="of">/ data engineering</span></div>
+      <div class="heroTop">
+        <h1 class="big">
+          <span class="row"><span data-h="1">Jachinn</span></span>
+          <span class="row"><span data-h="2">Paul</span></span>
+        </h1>
+        <div class="ntext">
+          <p class="sub" data-anim="up">
+            I build <b>medallion lakehouses</b> and <b>streaming pipelines</b> that stay fast,
+            cheap and reliable under production load.
+          </p>
+          <div class="herometa" data-anim="up">
+            <span>Data Engineer</span><span class="dot">·</span><span>3+ yrs</span>
+            <span class="dot">·</span><span>Chennai, IST</span>
+            <span class="dot">·</span><span>Databricks / Spark / Delta</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="cue"><i></i> scroll</div>
+  </section>
+
+  <!-- 01 -->
+  <section class="sec" id="statement" data-chap="01" data-title="Thesis">
+    <div class="hold inner">
+      <div class="plabel" data-anim="up">01 <span class="of">— Thesis</span></div>
+      <h2 class="line" id="stLine"></h2>
+    </div>
+  </section>
+
+  <!-- 02 -->
+  <section class="sec" id="lake" data-chap="02" data-title="Lakehouse">
+    <div class="pin">
+      <div class="inner">
+        <div class="plabel" data-anim="up">02 <span class="of">— Reference architecture · Kissflow</span></div>
+        <h2 class="shead" data-anim="up">How it's built.</h2>
+        <div class="schem">
+          <svg id="lakeSvg" viewBox="0 0 960 380" role="img" aria-label="A medallion lakehouse, left to right: 10-plus heterogeneous sources converge into a Bronze raw-landing layer on S3 with schema-on-read; incremental PySpark and Polars merges produce a conformed, deduped Silver layer; curated star-schema marts form the Gold layer; Snowflake and dbt serve sub-second dashboards. A governance rail — lineage, RBAC, PII classification and CI gates — spans the medallion layers. Runtime down 40 percent, warehouse spend down 30 percent.">
+            <defs>
+              <marker id="mk" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--accent)"/></marker>
+            </defs>
+            <g font-family="JetBrains Mono, monospace">
+              <!-- SOURCES -->
+              <g class="lk-src">
+                <text x="24" y="84" font-size="9.5" letter-spacing="1.2" fill="var(--faint)">10 + SOURCES</text>
+                <line x1="34" y1="100" x2="88" y2="166" stroke="var(--hair)" stroke-width="1"/>
+                <line x1="34" y1="130" x2="88" y2="166" stroke="var(--hair)" stroke-width="1"/>
+                <line x1="34" y1="160" x2="88" y2="166" stroke="var(--hair)" stroke-width="1"/>
+                <line x1="34" y1="190" x2="88" y2="166" stroke="var(--hair)" stroke-width="1"/>
+                <line x1="34" y1="220" x2="88" y2="166" stroke="var(--hair)" stroke-width="1"/>
+                <line x1="34" y1="250" x2="88" y2="166" stroke="var(--hair)" stroke-width="1"/>
+                <circle cx="34" cy="100" r="3.4" fill="var(--muted)"/><circle cx="34" cy="130" r="3.4" fill="var(--muted)"/><circle cx="34" cy="160" r="3.4" fill="var(--muted)"/>
+                <circle cx="34" cy="190" r="3.4" fill="var(--muted)"/><circle cx="34" cy="220" r="3.4" fill="var(--muted)"/><circle cx="34" cy="250" r="3.4" fill="var(--muted)"/>
+                <circle cx="88" cy="166" r="4.5" fill="var(--faint)"/>
+                <text x="24" y="286" font-size="8" fill="var(--faint)">APIs · DBs · CDC · files</text>
+              </g>
+
+              <!-- BRONZE -->
+              <g class="lk-b">
+                <rect class="fill" x="150" y="78" width="186" height="176" fill="var(--bronze)" opacity="0"/>
+                <rect class="box" x="150" y="78" width="186" height="176" fill="none" stroke="var(--hair)" stroke-width="1"/>
+                <rect x="150" y="78" width="5" height="176" fill="var(--bronze)"/>
+                <g class="cnt" fill="var(--bronze)">
+                  <circle cx="180" cy="118" r="2.3"/><circle cx="216" cy="108" r="2.3"/><circle cx="252" cy="126" r="2.3"/><circle cx="292" cy="114" r="2.3"/>
+                  <circle cx="172" cy="152" r="2.3"/><circle cx="208" cy="166" r="2.3"/><circle cx="250" cy="150" r="2.3"/><circle cx="300" cy="166" r="2.3"/>
+                  <circle cx="186" cy="200" r="2.3"/><circle cx="224" cy="212" r="2.3"/><circle cx="266" cy="198" r="2.3"/><circle cx="306" cy="206" r="2.3"/>
+                </g>
+                <text class="lb" x="243" y="66" text-anchor="middle" font-size="11.5" letter-spacing="1" fill="var(--bronze)">BRONZE</text>
+                <text class="lb" x="243" y="240" text-anchor="middle" font-size="8.5" fill="var(--muted)">raw · S3 · schema-on-read</text>
+              </g>
+
+              <!-- SILVER -->
+              <g class="lk-s">
+                <rect class="fill" x="402" y="78" width="186" height="176" fill="var(--silver)" opacity="0"/>
+                <rect class="box" x="402" y="78" width="186" height="176" fill="none" stroke="var(--hair)" stroke-width="1"/>
+                <rect x="402" y="78" width="5" height="176" fill="var(--silver)"/>
+                <g class="cnt" fill="var(--silver)">
+                  <circle cx="432" cy="112" r="2.3"/><circle cx="470" cy="112" r="2.3"/><circle cx="508" cy="112" r="2.3"/><circle cx="546" cy="112" r="2.3"/>
+                  <circle cx="432" cy="158" r="2.3"/><circle cx="470" cy="158" r="2.3"/><circle cx="508" cy="158" r="2.3"/><circle cx="546" cy="158" r="2.3"/>
+                  <circle cx="432" cy="204" r="2.3"/><circle cx="470" cy="204" r="2.3"/><circle cx="508" cy="204" r="2.3"/><circle cx="546" cy="204" r="2.3"/>
+                </g>
+                <text class="lb" x="495" y="66" text-anchor="middle" font-size="11.5" letter-spacing="1" fill="var(--silver)">SILVER</text>
+                <text class="lb" x="495" y="240" text-anchor="middle" font-size="8.5" fill="var(--muted)">conformed · deduped</text>
+              </g>
+
+              <!-- GOLD -->
+              <g class="lk-g">
+                <rect x="660" y="76" width="186" height="182" fill="var(--gold)" opacity="0.05"/>
+                <rect class="fill" x="654" y="72" width="186" height="182" fill="var(--gold)" opacity="0"/>
+                <rect class="box" x="654" y="72" width="186" height="182" fill="none" stroke="var(--gold)" stroke-width="1.2"/>
+                <rect x="654" y="72" width="5" height="182" fill="var(--gold)"/>
+                <g class="cnt" fill="none" stroke="var(--gold)" stroke-width="1">
+                  <rect x="672" y="96" width="20" height="24" rx="2"/><rect x="710" y="96" width="20" height="24" rx="2"/><rect x="748" y="96" width="20" height="24" rx="2"/><rect x="786" y="96" width="20" height="24" rx="2"/>
+                  <rect x="672" y="142" width="20" height="24" rx="2"/><rect x="710" y="142" width="20" height="24" rx="2"/><rect x="748" y="142" width="20" height="24" rx="2"/><rect x="786" y="142" width="20" height="24" rx="2"/>
+                  <rect x="672" y="188" width="20" height="24" rx="2"/><rect x="710" y="188" width="20" height="24" rx="2"/><rect x="748" y="188" width="20" height="24" rx="2"/><rect x="786" y="188" width="20" height="24" rx="2"/>
+                </g>
+                <text class="lb" x="747" y="60" text-anchor="middle" font-size="11.5" letter-spacing="1" fill="var(--gold)">GOLD</text>
+                <text class="lb" x="747" y="240" text-anchor="middle" font-size="8.5" fill="var(--muted)">curated marts · star schema</text>
+              </g>
+
+              <!-- SERVE -->
+              <g class="lk-serve">
+                <rect x="876" y="122" width="68" height="112" rx="3" fill="var(--surface-2)" stroke="var(--accent)" stroke-width="1.4"/>
+                <rect x="897" y="200" width="7" height="14" fill="var(--accent)" opacity="0.85"/>
+                <rect x="908" y="192" width="7" height="22" fill="var(--accent)" opacity="0.85"/>
+                <rect x="919" y="205" width="7" height="9" fill="var(--accent)" opacity="0.85"/>
+                <text x="910" y="150" text-anchor="middle" font-size="10.5" letter-spacing="1" fill="var(--accent)">SERVE</text>
+                <text x="910" y="166" text-anchor="middle" font-size="8" fill="var(--muted)">Snowflake</text>
+                <text x="910" y="178" text-anchor="middle" font-size="8" fill="var(--muted)">dbt</text>
+                <text x="910" y="252" text-anchor="middle" font-size="8" fill="var(--muted)">sub-second BI</text>
+              </g>
+
+              <!-- PIPES -->
+              <path class="pipe" id="pp1" d="M88 166 C114 166 124 166 150 166" fill="none" stroke="var(--accent)" stroke-width="1.6" marker-end="url(#mk)"/>
+              <path class="pipe" id="pp2" d="M336 166 C364 152 374 180 402 166" fill="none" stroke="var(--accent)" stroke-width="1.6" marker-end="url(#mk)"/>
+              <path class="pipe" id="pp3" d="M588 166 C614 180 624 150 654 163" fill="none" stroke="var(--accent)" stroke-width="1.6" marker-end="url(#mk)"/>
+              <path class="pipe" id="pp4" d="M840 163 C862 163 870 178 876 178" fill="none" stroke="var(--accent)" stroke-width="1.6" marker-end="url(#mk)"/>
+              <circle class="pkt" r="4" fill="var(--accent)" opacity="0"/>
+              <circle class="pkt" r="4" fill="var(--accent)" opacity="0"/>
+              <circle class="pkt" r="4" fill="var(--accent)" opacity="0"/>
+              <circle class="pkt" r="4" fill="var(--accent)" opacity="0"/>
+
+              <!-- GOVERNANCE + VALUE -->
+              <g class="lk-cap" opacity="0">
+                <text x="243" y="300" text-anchor="middle" font-size="9" letter-spacing="0.5" fill="var(--signal)">−40% RUNTIME</text>
+                <text x="495" y="300" text-anchor="middle" font-size="9" letter-spacing="0.5" fill="var(--signal)">SCHEMA EVOLUTION · AUTO</text>
+                <text x="747" y="300" text-anchor="middle" font-size="9" letter-spacing="0.5" fill="var(--signal)">−30% SPEND</text>
+                <path d="M150 316 L150 324 L840 324 L840 316" fill="none" stroke="var(--faint)" stroke-width="1"/>
+                <text x="495" y="346" text-anchor="middle" font-size="8.5" letter-spacing="1.2" fill="var(--faint)">LINEAGE · RBAC · PII CLASSIFICATION · CI GATES</text>
+              </g>
+            </g>
+          </svg>
+        </div>
+        <div class="lk-notes" data-anim="up">
+          <div class="n"><div class="t">Storage</div><p>S3 + Glue over warehouse-only — raw and curated stay decoupled; history reprocesses without re-ingest.</p></div>
+          <div class="n"><div class="t">Compute</div><p>PySpark + Polars, merge/upsert with automated schema evolution. Batch runtime −40%.</p></div>
+          <div class="n"><div class="t">Delivery</div><p>CI/CD with tests, RBAC and PII checks. Deploy cycles: days → hours.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 -->
+  <section class="sec" id="decisions" data-chap="03" data-title="Decisions">
+    <div class="inner">
+      <div class="plabel" data-anim="up">03 <span class="of">— Architecture decisions · Kissflow lakehouse</span></div>
+      <h2 class="shead" data-anim="up">Decisions of record.</h2>
+      <div class="dgrid">
+        <div class="dside">
+          <svg id="miniPipe" viewBox="0 0 210 300" data-active="" role="img" aria-label="Pipeline stages: sources, bronze, silver, gold, serve.">
+            <g font-family="JetBrains Mono, monospace" font-size="10">
+              <line class="spine" x1="30" y1="34" x2="30" y2="270" stroke="var(--hair)" stroke-width="1"/>
+              <g class="st st-src"><circle cx="30" cy="40" r="5"/><text x="46" y="44">SOURCES</text></g>
+              <g class="st st-bronze"><circle cx="30" cy="97" r="5"/><text x="46" y="101">BRONZE</text></g>
+              <g class="st st-silver"><circle cx="30" cy="154" r="5"/><text x="46" y="158">SILVER</text></g>
+              <g class="st st-gold"><circle cx="30" cy="211" r="5"/><text x="46" y="215">GOLD</text></g>
+              <g class="st st-serve"><circle cx="30" cy="268" r="5"/><text x="46" y="272">SERVE</text></g>
+            </g>
+          </svg>
+          <p class="dhint">the calls behind the diagram — and the cost of each</p>
+        </div>
+
+        <div class="dlist">
+          <article class="dentry" data-stage="bronze">
+            <span class="dstage">Sources → Bronze</span>
+            <h3>Land it raw, decide later.</h3>
+            <div class="dquad">
+              <div><b>Decision</b><p>Ingest 10+ heterogeneous sources into a Bronze layer on S3 with schema-on-read; catalog in Glue.</p></div>
+              <div class="rej"><b>Considered</b><p>Model straight into the warehouse — warehouse-only ingest.</p></div>
+              <div><b>Why</b><p>Raw and curated stay decoupled — historical data reprocesses independently, without re-ingesting from source systems.</p></div>
+              <div class="trade"><b>Tradeoff</b><p>An extra hop and storage layer to operate; schema drift surfaces later, in Silver, instead of at ingest.</p></div>
+            </div>
+          </article>
+
+          <article class="dentry" data-stage="silver">
+            <span class="dstage">Bronze → Silver</span>
+            <h3>Merge, don't reload.</h3>
+            <div class="dquad">
+              <div><b>Decision</b><p>Rebuilt the transform layer in PySpark + Polars around incremental merge/upsert with automated schema evolution.</p></div>
+              <div class="rej"><b>Considered</b><p>Full-refresh batch rebuilds each run.</p></div>
+              <div><b>Why</b><p>Only changed partitions are recomputed — batch pipeline runtime dropped 40%.</p></div>
+              <div class="trade"><b>Tradeoff</b><p>Merge logic and idempotency have to be exactly right; late and duplicate data handling moves into the job.</p></div>
+            </div>
+            <pre class="code"><code class="language-python">from delta.tables import DeltaTable
+
+# spark.databricks.delta.schema.autoMerge.enabled = true
+(DeltaTable.forName(spark, "silver.orders").alias("t")
+    .merge(source.alias("s"), "t.order_id = s.order_id")
+    .whenMatchedUpdateAll()
+    .whenNotMatchedInsertAll()
+    .execute())</code></pre>
+          </article>
+
+          <article class="dentry" data-stage="quality">
+            <span class="dstage">Across the pipeline</span>
+            <h3>A bad row shouldn't reach a dashboard.</h3>
+            <div class="dquad">
+              <div><b>Decision</b><p>dbt tests (uniqueness, referential integrity, not-null) plus Great Expectations contracts and PII/RBAC checks, all wired into CI.</p></div>
+              <div class="rej"><b>Considered</b><p>Post-hoc data-quality monitoring and alerting only.</p></div>
+              <div><b>Why</b><p>Schema and data-quality regressions are caught before they reach production marts; deploy cycles went from days to hours.</p></div>
+              <div class="trade"><b>Tradeoff</b><p>CI runtime and test maintenance grow with the model graph.</p></div>
+            </div>
+            <pre class="code"><code class="language-yaml"># models/marts/_schema.yml
+models:
+  - name: dim_account
+    columns:
+      - name: account_id
+        tests: [unique, not_null]
+
+# .github/workflows/ci.yml
+- run: dbt test --select state:modified+ --fail-fast</code></pre>
+          </article>
+
+          <article class="dentry" data-stage="gold">
+            <span class="dstage">Silver → Gold</span>
+            <h3>Model for the question, not the source.</h3>
+            <div class="dquad">
+              <div><b>Decision</b><p>Snowflake dimensional (star-schema) models and materialized views; SQL tuned with CTEs, window functions and clustering keys.</p></div>
+              <div class="rej"><b>Considered</b><p>Serving Silver tables directly to BI.</p></div>
+              <div><b>Why</b><p>Sub-second dashboard loads and predictable query cost — warehouse compute spend down 30%.</p></div>
+              <div class="trade"><b>Tradeoff</b><p>Modelling effort up front; materialized-view refresh and clustering need upkeep.</p></div>
+            </div>
+            <pre class="code"><code class="language-sql">create or replace table gold.account_health
+  cluster by (dt) as
+with daily as (
+    select account_id, dt, sum(events) as events
+    from silver.activity
+    group by 1, 2
+)
+select *,
+    avg(events) over (
+        partition by account_id order by dt
+        rows between 6 preceding and current row
+    ) as events_7d
+from daily;</code></pre>
+          </article>
+
+          <article class="dentry" data-stage="serve">
+            <span class="dstage">Serve / cost</span>
+            <h3>Own the reporting layer.</h3>
+            <div class="dquad">
+              <div><b>Decision</b><p>Built a native ETL/reporting framework to replace a third-party BI tool.</p></div>
+              <div class="rej"><b>Considered</b><p>Renew the third-party BI licence.</p></div>
+              <div><b>Why</b><p>Eliminated roughly $40,000/yr in licensing; reporting logic now lives in version control next to the pipelines.</p></div>
+              <div class="trade"><b>Tradeoff</b><p>A framework to maintain in-house — feature parity is on us.</p></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 -->
+  <section class="sec" id="record" data-chap="04" data-title="Record">
+    <div class="pin">
+      <div class="cap">
+        <div class="plabel">04 <span class="of">— Record · 2021 → 2026</span></div>
+      </div>
+      <div class="track" id="rTrack">
+        <div class="rcard">
+          <span class="co">Kissflow</span><span class="rt">Data Engineer</span><span class="dt">NOV 2024 — NOW · CHENNAI</span>
+          <ul>
+            <li>Medallion lakehouse on S3 · 10+ sources · schema-on-read + lineage</li>
+            <li>Snowflake dim models → sub-second dashboards, −30% compute</li>
+            <li>Native ETL/BI framework → −$40k/yr licensing</li>
+          </ul>
+          <span class="big"><span class="s">40%</span> ↓ runtime</span>
+        </div>
+        <div class="rcard">
+          <span class="co">Klenty</span><span class="rt">Data Engineer</span><span class="dt">MAY — NOV 2024 · CHENNAI</span>
+          <ul>
+            <li>Databricks/Delta ETL · 30+ Airflow DAGs · SLA + backfill</li>
+            <li>First dbt + Airflow + Snowflake platform from scratch</li>
+            <li>Spark shuffle tuning: pruning, broadcast joins, AQE</li>
+          </ul>
+          <span class="big"><span class="s">60%</span> ↑ queries</span>
+        </div>
+        <div class="rcard">
+          <span class="co">Futurense</span><span class="rt">Junior Data Engineer</span><span class="dt">MAY — NOV 2023 · BANGALORE</span>
+          <ul>
+            <li>Great Expectations + pytest data-quality framework</li>
+            <li>50+ metadata-driven ADF pipelines from templates</li>
+            <li>Live SQL Server / Postgres → ADLS Gen2 cutover + Terraform</li>
+          </ul>
+          <span class="big"><span class="s">2 TB</span> migrated</span>
+        </div>
+        <div class="rcard">
+          <span class="co">Pine Labs</span><span class="rt">SWE Intern</span><span class="dt">SEP — NOV 2021 · BANGALORE</span>
+          <ul>
+            <li>AES-256 + RSA field encryption in SQL Server</li>
+            <li>Automated integrity validation in Python, −30% manual QA</li>
+          </ul>
+          <span class="big">PCI-DSS</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 -->
+  <section class="sec" id="impact" data-chap="05" data-title="Impact">
+    <div class="hold inner">
+      <div class="plabel" data-anim="up">05 <span class="of">— Measured impact</span></div>
+      <h2 class="shead" data-anim="up">What it changed.</h2>
+      <div class="lead2" data-anim="up">
+        <div>
+          <div class="v"><span class="s">−</span><span class="ct" data-to="40">0</span>%</div>
+          <div class="k">Batch pipeline runtime, after rebuilding the transform layer on incremental PySpark + Polars merges.</div>
+          <div class="src">KISSFLOW</div>
+        </div>
+        <div>
+          <div class="v"><span class="s">$</span><span class="ct" data-to="40">0</span>k<span class="u"> / yr</span></div>
+          <div class="k">Recurring BI licensing removed by building a native ETL and reporting framework in-house.</div>
+          <div class="src">KISSFLOW</div>
+        </div>
+      </div>
+      <div class="rest" data-anim="up">
+        <div class="c" style="--p:30%"><div class="v"><span class="s">−</span><span class="ct" data-to="30">0</span>%</div><span class="bar"><b></b></span><div class="k">warehouse compute spend</div><div class="src">KISSFLOW</div></div>
+        <div class="c" style="--p:60%"><div class="v"><span class="s">+</span><span class="ct" data-to="60">0</span>%</div><span class="bar"><b></b></span><div class="k">Spark query performance</div><div class="src">KLENTY</div></div>
+        <div class="c" style="--p:25%"><div class="v"><span class="s">−</span><span class="ct" data-to="25">0</span>%</div><span class="bar"><b></b></span><div class="k">idle cloud compute spend</div><div class="src">COST DASHBOARD</div></div>
+        <div class="c"><div class="v"><span class="s">&lt;</span><span class="ct" data-to="2">0</span> min</div><div class="k">streaming latency, from a 24-hour batch cycle</div><div class="src">CLICKSTREAM</div></div>
+        <div class="c"><div class="v"><span class="ct" data-to="2">0</span> TB</div><div class="k">migrated to Delta Lake, zero source downtime</div><div class="src">FUTURENSE</div></div>
+        <div class="c"><div class="v"><span class="ct" data-to="50">0</span>+</div><div class="k">metadata-driven pipelines from templates</div><div class="src">FUTURENSE</div></div>
+      </div>
+      <p class="note">Figures as reported from production work. Diagrams are illustrative, not live telemetry.</p>
+    </div>
+  </section>
+
+  <!-- 06 -->
+  <section class="sec" id="builds" data-chap="06" data-title="Builds">
+    <div class="hold inner">
+      <div class="plabel" data-anim="up">06 <span class="of">— Selected builds</span></div>
+      <h2 class="shead" data-anim="up">Built for myself.</h2>
+      <div class="two">
+        <div class="bcard" data-anim="up">
+          <h3>Real-Time Clickstream Analytics</h3>
+          <div class="tg">KAFKA · SPARK STRUCTURED STREAMING · dbt · SNOWFLAKE</div>
+          <svg viewBox="0 0 320 70" aria-hidden="true">
+            <g font-family="JetBrains Mono, monospace" font-size="8" fill="var(--muted)">
+              <rect x="2" y="24" width="52" height="22" fill="var(--surface-2)" stroke="var(--bronze)"/><text x="28" y="38" text-anchor="middle">KAFKA</text>
+              <rect x="80" y="24" width="66" height="22" fill="var(--surface-2)" stroke="var(--silver)"/><text x="113" y="35" text-anchor="middle">SPARK SS</text><text x="113" y="44" text-anchor="middle" font-size="6">watermark</text>
+              <rect x="172" y="24" width="46" height="22" fill="var(--surface-2)" stroke="var(--gold)"/><text x="195" y="38" text-anchor="middle">dbt/CI</text>
+              <rect x="244" y="24" width="72" height="22" fill="var(--surface-2)" stroke="var(--accent)"/><text x="280" y="38" text-anchor="middle">SNOWFLAKE</text>
+              <line x1="54" y1="35" x2="78" y2="35" stroke="var(--accent)" stroke-width="1.3"/>
+              <line x1="146" y1="35" x2="170" y2="35" stroke="var(--accent)" stroke-width="1.3"/>
+              <line x1="218" y1="35" x2="242" y2="35" stroke="var(--accent)" stroke-width="1.3"/>
+            </g>
+          </svg>
+          <p>Checkpointing + idempotent Delta MERGE prevent duplicates on reprocessing; stateful processing with event-time watermarking for late arrivals.</p>
+          <pre class="code"><code class="language-python">(events
+    .withWatermark("event_time", "2 minutes")
+    .dropDuplicates(["event_id"])          # idempotent on replay
+    .writeStream
+    .option("checkpointLocation", CKPT)
+    .foreachBatch(merge_into_delta)
+    .start())</code></pre>
+          <div class="kpi">24-hour batch → <b>&lt; 2-minute latency</b></div>
+        </div>
+        <div class="bcard" data-anim="up">
+          <h3>Cloud Cost Optimization Dashboard</h3>
+          <div class="tg">PYTHON · SNOWFLAKE · STREAMLIT · AWS LAMBDA</div>
+          <svg viewBox="0 0 320 70" aria-hidden="true">
+            <g font-family="JetBrains Mono, monospace" font-size="8" fill="var(--muted)">
+              <rect x="2" y="24" width="58" height="22" fill="var(--surface-2)" stroke="var(--signal)"/><text x="31" y="38" text-anchor="middle">LAMBDA</text>
+              <rect x="92" y="24" width="86" height="22" fill="var(--surface-2)" stroke="var(--accent)"/><text x="135" y="38" text-anchor="middle">acct_usage</text>
+              <rect x="210" y="24" width="90" height="22" fill="var(--surface-2)" stroke="var(--gold)"/><text x="255" y="38" text-anchor="middle">STREAMLIT</text>
+              <line x1="60" y1="35" x2="90" y2="35" stroke="var(--accent)" stroke-width="1.3"/>
+              <line x1="178" y1="35" x2="208" y2="35" stroke="var(--accent)" stroke-width="1.3"/>
+            </g>
+          </svg>
+          <p>Flags idle warehouses and inefficient queries, then puts real-time compute cost in front of the teams that generate the spend.</p>
+          <pre class="code"><code class="language-sql">select warehouse_name,
+       date_trunc('day', start_time) as day,
+       sum(credits_used)             as credits
+from snowflake.account_usage.warehouse_metering_history
+where start_time &gt;= dateadd(day, -30, current_date)
+group by 1, 2
+order by credits desc;</code></pre>
+          <div class="kpi">≈ <b>25%</b> idle compute spend reclaimed</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 -->
+  <section class="sec" id="stack" data-chap="07" data-title="Stack">
+    <div class="hold inner">
+      <div class="plabel" data-anim="up">07 <span class="of">— Stack</span></div>
+      <h2 class="shead" data-anim="up">What I reach for.</h2>
+      <div class="m">
+        <div class="g" data-anim="up"><div class="gt">Languages &amp; SQL</div><div class="it"><span>Python</span><span>PySpark</span><span>SQL / CTEs</span><span>Window functions</span><span>Query optimization</span><span>Bash</span></div></div>
+        <div class="g" data-anim="up"><div class="gt">Distributed &amp; lakehouse</div><div class="it"><span>Apache Spark</span><span>Databricks</span><span>Delta Lake</span><span>Structured Streaming</span><span>Medallion architecture</span><span>Polars</span><span>Pandas</span><span>Kafka</span></div></div>
+        <div class="g" data-anim="up"><div class="gt">Cloud — AWS</div><div class="it"><span>S3</span><span>Glue</span><span>EMR</span><span>Athena</span><span>Lambda</span><span>Redshift</span><span>IAM</span></div></div>
+        <div class="g" data-anim="up"><div class="gt">Cloud — Azure</div><div class="it"><span>ADLS Gen2</span><span>Data Factory</span><span>Synapse</span><span>Key Vault</span></div></div>
+        <div class="g" data-anim="up"><div class="gt">Warehouse &amp; orchestration</div><div class="it"><span>Snowflake</span><span>dbt</span><span>Apache Airflow</span><span>Databricks Workflows</span><span>Star-schema modeling</span></div></div>
+        <div class="g" data-anim="up"><div class="gt">Quality &amp; DevOps</div><div class="it"><span>Great Expectations</span><span>pytest</span><span>CDC</span><span>GitHub Actions</span><span>RBAC</span><span>PII classification</span><span>Data lineage</span><span>Terraform</span></div></div>
+        <div class="g" data-anim="up"><div class="gt">Databases</div><div class="it"><span>PostgreSQL</span><span>SQL Server</span><span>Oracle</span><span>MongoDB</span><span>Elasticsearch</span></div></div>
+        <div class="g" data-anim="up"><div class="gt">Education</div><div class="it"><span>B.Tech Computer Science</span><span>Minor · Big Data</span><span>SRM University · 2019–2023</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 -->
+  <section class="sec" id="contact" data-chap="08" data-title="Contact">
+    <div class="hold inner">
+      <div class="plabel" data-anim="up">08 <span class="of">— Open channel</span></div>
+      <div class="big" id="ctBig" aria-label="Let's move some data.">Let's move<br />some <span class="s">data.</span></div>
+      <div class="cgrid">
+        <div class="lines">
+          <a href="mailto:jac.edwinx@gmail.com"><span class="k">Email</span><span class="v">jac.edwinx@gmail.com</span></a>
+          <a href="https://github.com/crypt3d-c00kie"><span class="k">GitHub</span><span class="v">github.com/crypt3d-c00kie</span></a>
+          <a href="https://linkedin.com/in/jac-edwin"><span class="k">LinkedIn</span><span class="v">linkedin.com/in/jac-edwin</span></a>
+          <div class="l"><span class="k">Location</span><span class="v">Chennai, India · IST</span></div>
+        </div>
+        <div class="specsheet" data-anim="up">
+          <div class="st">Résumé — summary</div>
+          <div class="fr"><span class="k">Level</span><span class="v">Data Engineer · 3+ yrs · 4 companies</span></div>
+          <div class="fr"><span class="k">Focus</span><span class="v">Medallion lakehouse · streaming · lakehouse → warehouse</span></div>
+          <div class="fr"><span class="k">Stack</span><span class="v">Databricks · Spark · Delta Lake · Polars · Snowflake · dbt · Airflow · Kafka</span></div>
+          <div class="fr"><span class="k">Cloud</span><span class="v">AWS — S3, Glue, EMR, Athena, Lambda, Redshift &nbsp;·&nbsp; Azure — ADLS Gen2, ADF, Synapse</span></div>
+          <div class="fr"><span class="k">Based</span><span class="v">Chennai, India · IST (UTC+05:30)</span></div>
+          <div class="fr"><span class="k">Edu</span><span class="v">B.Tech Computer Science, Minor Big Data · SRM University · 2019–2023</span></div>
+          <div class="fr"><span class="k">Status</span><span class="v">Open to data engineering &amp; platform roles</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <span>Jachinn Paul · 2026 · set in Bricolage Grotesque &amp; JetBrains Mono · prototype</span>
+  <a href="#hero">Back to top ↑</a>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/MotionPathPlugin.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+(function(){
+  "use strict";
+  var RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var root = document.documentElement;
+
+  /* ---------------- loader ---------------- */
+  (function(){
+    var L = document.getElementById("loader");
+    if(!L) return;
+    var seen=false; try{ seen = sessionStorage.getItem("jp-seen")==="1"; }catch(e){}
+    if(seen || RM){ L.remove(); return; }
+    try{ sessionStorage.setItem("jp-seen","1"); }catch(e){}
+    var killed=false;
+    function done(fast){ if(killed) return; killed=true; L.classList.add("done");
+      setTimeout(function(){ if(L.parentNode) L.remove(); }, fast?380:650); }
+    setTimeout(function(){ done(false); }, 1150);
+    function skip(){ done(true); removeEventListener("pointerdown",skip); removeEventListener("keydown",skip); }
+    addEventListener("pointerdown", skip); addEventListener("keydown", skip);
+  })();
+
+  /* ---------------- theme ---------------- */
+  var tBtn=document.getElementById("themeBtn"), tLabel=document.getElementById("themeLabel"), tIcon=document.getElementById("themeIcon");
+  var SUN='<circle cx="12" cy="12" r="4.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2 2M17.1 17.1l2 2M19.1 4.9l-2 2M7 17.1l-2 2"/>';
+  var MOON='<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>';
+  function isNight(){ var a=root.getAttribute("data-theme"); return a ? a==="night" : matchMedia("(prefers-color-scheme: dark)").matches; }
+  function paint(){ var n=isNight(); tLabel.textContent=n?"Day":"Night"; tIcon.innerHTML=n?SUN:MOON; updateGLColors(true); }
+  try{ var sv=localStorage.getItem("jp-theme"); if(sv==="day"||sv==="night") root.setAttribute("data-theme",sv); }catch(e){}
+  tBtn.addEventListener("click", function(){
+    var nx=isNight()?"day":"night"; root.setAttribute("data-theme",nx);
+    try{ localStorage.setItem("jp-theme",nx); }catch(e){} paint();
+  });
+
+  /* ---------------- WebGL backdrop ---------------- */
+  var cv=document.getElementById("gl");
+  var gl=cv.getContext("webgl")||cv.getContext("experimental-webgl");
+  var glOK=!!gl, uni={}, tState={ d:isNight()?1:0, mx:.5, my:.4, scroll:0 };
+  function hex(v){ v=v.trim(); var m=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(v);
+    return m?[parseInt(m[1],16)/255,parseInt(m[2],16)/255,parseInt(m[3],16)/255]:[0,0,0]; }
+  function cssVar(n){ return getComputedStyle(document.body).getPropertyValue(n); }
+  var COL={ paper:[0,0,0], f1:[0,0,0], f2:[0,0,0], f3:[0,0,0], f4:[0,0,0] };
+  var FIELD={ alpha:0.5 };
+  var setBlend=function(){};
+  function updateGLColors(tween){
+    var p=hex(cssVar("--paper")),
+        a=hex(cssVar("--f1")), b=hex(cssVar("--f2")),
+        c=hex(cssVar("--f3")), d=hex(cssVar("--f4"));
+    /* night blends additively, so each particle carries less alpha and density does the work */
+    var targetAlpha = isNight() ? 0.36 : 0.62;
+    if(glOK && tween && window.gsap){
+      gsap.to(COL.paper,{0:p[0],1:p[1],2:p[2],duration:.6,overwrite:true});
+      gsap.to(COL.f1,{0:a[0],1:a[1],2:a[2],duration:.6,overwrite:true});
+      gsap.to(COL.f2,{0:b[0],1:b[1],2:b[2],duration:.6,overwrite:true});
+      gsap.to(COL.f3,{0:c[0],1:c[1],2:c[2],duration:.6,overwrite:true});
+      gsap.to(COL.f4,{0:d[0],1:d[1],2:d[2],duration:.6,overwrite:true});
+      gsap.to(FIELD,{ alpha:targetAlpha, duration:.6 });
+      gsap.to(tState,{ d:isNight()?1:0, duration:.6 });
+    } else {
+      COL.paper=p; COL.f1=a; COL.f2=b; COL.f3=c; COL.f4=d;
+      FIELD.alpha=targetAlpha; tState.d=isNight()?1:0;
+    }
+    setBlend();
+  }
+  /* The field: ~18k GPU points that perform the medallion transformation across
+     the whole scroll — chaotic drift (raw) → laminar streams (conformed) → lattice (curated). */
+  if(glOK){
+    var COLS = innerWidth < 760 ? 104 : 172;
+    var ROWS = innerWidth < 760 ? 60 : 104;
+    var NPT  = COLS * ROWS;
+
+    var vsrc=[
+      "precision highp float;",
+      "attribute vec4 aSeed; attribute float aIdx;",
+      "uniform vec2 uRes; uniform float uT; uniform float uP; uniform vec2 uMouse;",
+      "uniform float uDpr; uniform float uCols; uniform float uRows; uniform float uAlpha;",
+      "uniform vec3 cA; uniform vec3 cB; uniform vec3 cC; uniform vec3 cD;",
+      "varying vec3 vCol; varying float vA;",
+      "void main(){",
+      "  float asp = uRes.x / uRes.y;",
+      "  float t = uT;",
+      /* state A — chaos */
+      "  vec2 pA = vec2(aSeed.x*2.0-1.0, aSeed.y*2.0-1.0) * vec2(asp*1.20, 1.14);",
+      "  pA += vec2(sin(t*0.16 + aSeed.z*6.2831)*0.21, cos(t*0.13 + aSeed.w*6.2831)*0.17);",
+      /* state B — laminar streams */
+      "  float lane = floor(aSeed.y * 11.0);",
+      "  float laneY = (lane/10.0 - 0.5) * 1.68;",
+      "  float sp = 0.045 + aSeed.z*0.065;",
+      "  float xx = fract(aSeed.x + t*sp) * 2.0 - 1.0;",
+      "  vec2 pB = vec2(xx*asp*1.20, laneY + (aSeed.w-0.5)*0.05 + sin(t*0.5 + aSeed.x*6.2831)*0.013);",
+      /* state C — lattice */
+      "  float col = mod(aIdx, uCols);",
+      "  float row = floor(aIdx / uCols);",
+      "  vec2 pC = vec2((col/(uCols-1.0)-0.5)*2.0*asp*1.06, (row/(uRows-1.0)-0.5)*2.02);",
+      "  pC += vec2(sin(t*0.42 + aIdx*0.021), cos(t*0.37 + aIdx*0.017)) * 0.0045;",
+      "  float s1 = smoothstep(0.04, 0.52, uP);",
+      "  float s2 = smoothstep(0.52, 0.96, uP);",
+      "  vec2 pos = mix(mix(pA, pB, s1), pC, s2);",
+      /* pointer displacement */
+      "  vec2 d = pos - uMouse;",
+      "  float dd = dot(d,d);",
+      "  pos += normalize(d + vec2(0.0001)) * exp(-dd*7.0) * 0.09;",
+      /* colour arc: bronze → silver → gold → accent */
+      "  float cp = clamp(uP*1.10 + (aSeed.z-0.5)*0.15, 0.0, 1.0);",
+      "  vec3 c = mix(cA, cB, smoothstep(0.00, 0.42, cp));",
+      "  c = mix(c, cC, smoothstep(0.42, 0.78, cp));",
+      "  c = mix(c, cD, smoothstep(0.82, 1.00, cp));",
+      "  vCol = c;",
+      "  vA = (0.30 + aSeed.z*0.42) * uAlpha;",
+      "  gl_PointSize = (1.5 + aSeed.w*2.4) * uDpr * mix(1.0, 0.66, s2);",
+      "  gl_Position = vec4(pos.x/asp, pos.y, 0.0, 1.0);",
+      "}"
+    ].join("\n");
+
+    var fsrc=[
+      "precision mediump float;",
+      "varying vec3 vCol; varying float vA;",
+      "void main(){",
+      "  vec2 c = gl_PointCoord - 0.5;",
+      "  float d = dot(c,c);",
+      "  if(d > 0.25) discard;",
+      "  gl_FragColor = vec4(vCol, vA * smoothstep(0.25, 0.04, d));",
+      "}"
+    ].join("\n");
+
+    function sh(t,s){ var o=gl.createShader(t); gl.shaderSource(o,s); gl.compileShader(o); return o; }
+    var pr=gl.createProgram();
+    gl.attachShader(pr, sh(gl.VERTEX_SHADER, vsrc));
+    gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, fsrc));
+    gl.linkProgram(pr); gl.useProgram(pr);
+
+    var seeds=new Float32Array(NPT*4), idxs=new Float32Array(NPT);
+    for(var i=0;i<NPT;i++){
+      seeds[i*4]=Math.random(); seeds[i*4+1]=Math.random();
+      seeds[i*4+2]=Math.random(); seeds[i*4+3]=Math.random();
+      idxs[i]=i;
+    }
+    var bS=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,bS); gl.bufferData(gl.ARRAY_BUFFER,seeds,gl.STATIC_DRAW);
+    var lS=gl.getAttribLocation(pr,"aSeed"); gl.enableVertexAttribArray(lS); gl.vertexAttribPointer(lS,4,gl.FLOAT,false,0,0);
+    var bI=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,bI); gl.bufferData(gl.ARRAY_BUFFER,idxs,gl.STATIC_DRAW);
+    var lI=gl.getAttribLocation(pr,"aIdx"); gl.enableVertexAttribArray(lI); gl.vertexAttribPointer(lI,1,gl.FLOAT,false,0,0);
+
+    ["uRes","uT","uP","uMouse","uDpr","uCols","uRows","uAlpha","cA","cB","cC","cD"]
+      .forEach(function(k){ uni[k]=gl.getUniformLocation(pr,k); });
+
+    gl.enable(gl.BLEND);
+    setBlend = function(){
+      /* dark ground → additive so dense streams bloom; light ground → subtractive ink */
+      if(isNight()) gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+      else gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    };
+    setBlend();
+
+    var DPR=1;
+    function resize(){
+      DPR=Math.min(devicePixelRatio||1, 1.5);
+      cv.width=Math.round(innerWidth*DPR); cv.height=Math.round(innerHeight*DPR);
+      gl.viewport(0,0,cv.width,cv.height);
+      if(RM && t0) rnd(performance.now());
+    }
+    resize(); addEventListener("resize", resize);
+    addEventListener("pointermove", function(e){
+      tState.mx=e.clientX/innerWidth; tState.my=1-e.clientY/innerHeight;
+    }, {passive:true});
+
+    updateGLColors(false);
+    var t0=performance.now(), mxs=.5, mys=.5, ps=0;
+    function frame(now){ rnd(now); requestAnimationFrame(frame); }
+    function rnd(now){
+      var asp=cv.width/cv.height;
+      mxs+=(tState.mx-mxs)*.05; mys+=(tState.my-mys)*.05;
+      ps += (tState.scroll-ps) * (RM?1:.075);
+      gl.clearColor(COL.paper[0],COL.paper[1],COL.paper[2],1);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.uniform2f(uni.uRes, cv.width, cv.height);
+      gl.uniform1f(uni.uT, RM?0:(now-t0)/1000);
+      gl.uniform1f(uni.uP, ps);
+      gl.uniform2f(uni.uMouse, (mxs*2-1)*asp, mys*2-1);
+      gl.uniform1f(uni.uDpr, DPR);
+      gl.uniform1f(uni.uCols, COLS);
+      gl.uniform1f(uni.uRows, ROWS);
+      gl.uniform1f(uni.uAlpha, FIELD.alpha);
+      gl.uniform3f(uni.cA, COL.f1[0],COL.f1[1],COL.f1[2]);
+      gl.uniform3f(uni.cB, COL.f2[0],COL.f2[1],COL.f2[2]);
+      gl.uniform3f(uni.cC, COL.f3[0],COL.f3[1],COL.f3[2]);
+      gl.uniform3f(uni.cD, COL.f4[0],COL.f4[1],COL.f4[2]);
+      gl.drawArrays(gl.POINTS, 0, NPT);
+    }
+    if(RM){
+      rnd(performance.now());
+      addEventListener("scroll", function(){ rnd(performance.now()); }, {passive:true});
+    } else {
+      requestAnimationFrame(frame);
+    }
+  } else { cv.style.background="var(--paper)"; }
+  paint();
+
+  /* ---------------- syntax highlight ---------------- */
+  if(window.hljs){
+    document.querySelectorAll("pre.code code").forEach(function(b){ try{ hljs.highlightElement(b); }catch(e){} });
+  }
+
+  /* ---------------- rail + progress + chapter ---------------- */
+  var prog=document.getElementById("prog");
+  var wm=document.getElementById("wm");
+  var railEl=document.getElementById("rail");
+  var secs=Array.prototype.slice.call(document.querySelectorAll(".sec"));
+  var railBtns=secs.map(function(s,i){
+    var b=document.createElement("button");
+    b.type="button"; b.title=s.getAttribute("data-title");
+    b.setAttribute("aria-label","Go to "+s.getAttribute("data-title"));
+    b.addEventListener("click", function(){ s.scrollIntoView({behavior:RM?"auto":"smooth", block:"start"}); });
+    railEl.appendChild(b); return b;
+  });
+  /* ghost chapter numerals (behind content) */
+  ["#statement","#decisions","#impact","#builds","#stack","#contact"].forEach(function(sel){
+    var s=document.querySelector(sel); if(!s) return;
+    var g=document.createElement("span");
+    g.className="ghost"; g.setAttribute("aria-hidden","true");
+    g.textContent=s.getAttribute("data-chap");
+    s.appendChild(g);
+  });
+
+  /* chapter seams */
+  secs.forEach(function(s){
+    if(s.id==="hero") return;
+    var d=document.createElement("div");
+    d.className="seam"; d.setAttribute("aria-hidden","true");
+    d.innerHTML='<b>'+s.getAttribute("data-chap")+' &nbsp;·&nbsp; '+s.getAttribute("data-title")+'</b><i></i>';
+    s.insertBefore(d, s.firstChild);
+  });
+
+  var curIdx=-1;
+  function onScroll(){
+    var h=document.documentElement, max=h.scrollHeight-h.clientHeight;
+    var p=max>0?h.scrollTop/max:0;
+    prog.style.width=(p*100).toFixed(2)+"%";
+    tState.scroll=p;
+    wm.classList.toggle("show", h.scrollTop > innerHeight*0.6);
+    var mid=h.scrollTop+innerHeight*0.4, ci=0;
+    for(var i=0;i<secs.length;i++){ if(secs[i].offsetTop<=mid) ci=i; }
+    if(ci!==curIdx){
+      curIdx=ci;
+      railBtns.forEach(function(b,k){ b.classList.toggle("on", k===ci); });
+    }
+  }
+  addEventListener("scroll", onScroll, {passive:true});
+  onScroll();
+
+  /* ---------------- guided tour: fast ramp between pages, slow crawl on content ---------------- */
+  (function(){
+    var pb=document.getElementById("playbtn"), lbl=document.getElementById("playlbl");
+    if(!pb) return;
+    var GS=window.gsap;
+    if(!GS || !window.ScrollToPlugin){ pb.style.display="none"; return; }
+    GS.registerPlugin(ScrollToPlugin);
+
+    var tl=null, active=false;
+    function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
+    function docMax(){ return document.documentElement.scrollHeight - innerHeight; }
+
+    function build(fromIdx){
+      if(tl){ tl.kill(); tl=null; }
+      tl = GS.timeline({ paused:true, onComplete:function(){ stop(); } });
+      for(var i=fromIdx; i<secs.length; i++){
+        var s=secs[i];
+        var top=clamp(s.offsetTop, 0, docMax());
+        var readEnd=clamp(s.offsetTop + s.offsetHeight - innerHeight, top, docMax());
+        var span=readEnd-top;
+        var readDur=clamp(span/130, 2.2, 15);         // slow crawl through the content
+        tl.to(window, { scrollTo:{ y:top, autoKill:false }, duration:(i===fromIdx?0.35:0.8), ease:"power3.inOut" });
+        tl.to(window, { scrollTo:{ y:readEnd, autoKill:false }, duration:readDur, ease:"none" });
+      }
+      tl.to(window, { scrollTo:{ y:docMax(), autoKill:false }, duration:1.0, ease:"power2.inOut" });
+    }
+    function play(){
+      active=true; pb.classList.add("playing"); lbl.textContent="Pause";
+      root.style.scrollBehavior="auto";
+      build(curIdx<0?0:curIdx);
+      tl.play(0);
+    }
+    function stop(){
+      active=false; pb.classList.remove("playing"); lbl.textContent="Play tour";
+      root.style.scrollBehavior="";
+      if(tl) tl.pause();
+    }
+    pb.addEventListener("click", function(){ active ? stop() : play(); });
+    ["wheel","touchstart","keydown"].forEach(function(ev){
+      addEventListener(ev, function(e){ if(active && !pb.contains(e.target)) stop(); }, {passive:true});
+    });
+    railBtns.forEach(function(b){ b.addEventListener("click", function(){ if(active) stop(); }); });
+  })();
+
+  /* ---------------- animation ---------------- */
+  var G=window.gsap, ST=window.ScrollTrigger;
+  if(G && ST){ G.registerPlugin(ST); if(window.MotionPathPlugin) G.registerPlugin(MotionPathPlugin); }
+
+  var STATEMENT="Fast under load. Cheap to run. Reliable when it matters.";
+  function buildStatement(){
+    var el=document.getElementById("stLine");
+    var em={ "Fast":1, "Cheap":1, "Reliable":1 };
+    el.innerHTML=STATEMENT.split(" ").map(function(w){
+      var key=w.replace(/[^A-Za-z]/g,"");
+      return '<span class="w'+(em[key]?" em":"")+'">'+w+'</span>';
+    }).join(" ");
+    return Array.prototype.slice.call(el.querySelectorAll(".w"));
+  }
+
+  function revealAll(){
+    document.querySelectorAll("[data-anim]").forEach(function(el){ el.style.opacity=1; el.style.transform="none"; });
+    document.querySelectorAll("#stLine .w, #hero [data-h], .cl").forEach(function(el){ el.style.opacity=1; el.style.transform="none"; });
+    document.querySelectorAll(".ct").forEach(function(c){ c.textContent=c.getAttribute("data-to"); });
+    document.querySelectorAll("#impact .rest .c").forEach(function(c){ c.classList.add("in"); });
+    document.querySelectorAll(".seam i").forEach(function(el){ el.style.transform="none"; });
+    document.querySelectorAll(".seam b").forEach(function(el){ el.style.opacity=1; });
+  }
+
+  if(!G || !ST || RM){
+    revealAll();
+    var wrds=buildStatement(); wrds.forEach(function(w){ w.style.opacity=1; });
+    var s0=document.createElement("style"); s0.textContent="#statement .w.em::after{transform:scaleX(1)}"; document.head.appendChild(s0);
+    document.querySelectorAll(".lk-src,.lk-b,.lk-s,.lk-g,.lk-serve,.pipe,.lk-cap,#lakeSvg .lb,#lakeSvg .cnt > *").forEach(function(nn){ nn.style.opacity=1; });
+    document.querySelectorAll(".lk-b .fill,.lk-s .fill,.lk-g .fill").forEach(function(f){ f.setAttribute("opacity",".11"); });
+    return;
+  }
+  addEventListener("error", revealAll);
+
+  try{
+
+  /* HERO */
+  G.set("#hero [data-h]", { yPercent:115 });
+  G.timeline({ delay:.15 })
+    .to("#hero [data-h]", { yPercent:0, duration:.9, ease:"expo.out", stagger:.12 })
+    .to("#hero [data-anim]", { opacity:1, y:0, duration:.7, ease:"power2.out", stagger:.1 }, "-=.5");
+  G.to("#hero .inner", {
+    scrollTrigger:{ trigger:"#hero", start:"top top", end:"bottom top", scrub:.6 },
+    scale:.74, yPercent:-6, opacity:.12, transformOrigin:"left top", ease:"none"
+  });
+
+  /* generic rise-ins */
+  G.utils.toArray("[data-anim='up']").forEach(function(el){
+    if(el.closest("#hero")) return;
+    G.to(el, { scrollTrigger:{ trigger:el, start:"top 85%" }, opacity:1, y:0, duration:.7, ease:"power2.out" });
+  });
+
+  /* ghost numerals drift on a slower plane */
+  G.utils.toArray(".ghost").forEach(function(g){
+    G.fromTo(g, { yPercent:11 }, { yPercent:-11, ease:"none",
+      scrollTrigger:{ trigger:g.parentNode, start:"top bottom", end:"bottom top", scrub:true } });
+  });
+
+  /* chapter seams draw themselves on entry */
+  G.utils.toArray(".seam").forEach(function(s){
+    G.timeline({ scrollTrigger:{ trigger:s, start:"top 94%", once:true } })
+      .to(s.querySelector("b"), { opacity:1, duration:.45, ease:"power2.out" })
+      .to(s.querySelector("i"), { scaleX:1, duration:1.0, ease:"power3.out" }, "-=.3");
+  });
+
+  /* STATEMENT */
+  var words=buildStatement();
+  var uStyle=document.createElement("style");
+  uStyle.textContent="#statement .w.em::after{ transition:transform .55s cubic-bezier(.2,.7,.2,1); } #statement .w.em[style*='--u']::after{ transform:scaleX(1); }";
+  document.head.appendChild(uStyle);
+  G.set(words, { opacity:.12, y:14 });
+  var stTl=G.timeline({ scrollTrigger:{ trigger:"#statement", start:"top 72%", end:"bottom 82%", scrub:.5 } });
+  words.forEach(function(w){ stTl.to(w, { opacity:1, y:0, duration:.4, ease:"power1.out" }); });
+  words.forEach(function(w){
+    if(!w.classList.contains("em")) return;
+    ST.create({ trigger:"#statement", start:"top 48%", once:true, onEnter:function(){ w.style.setProperty("--u","1"); } });
+  });
+
+  /* LAKEHOUSE assembles */
+  (function(){
+    var svg=document.getElementById("lakeSvg");
+    var pipes=svg.querySelectorAll(".pipe");
+    pipes.forEach(function(p){ var L=p.getTotalLength(); p.style.strokeDasharray=L; p.style.strokeDashoffset=L; });
+    G.set([".lk-src",".lk-b",".lk-s",".lk-g",".lk-serve"], { opacity:0, y:14 });
+    G.set(".lk-b .lb, .lk-s .lb, .lk-g .lb", { opacity:0 });
+    G.set(".lk-b .cnt > *, .lk-s .cnt > *, .lk-g .cnt > *", { opacity:0 });
+    var pkts=svg.querySelectorAll(".pkt");
+    var tl=G.timeline({ scrollTrigger:{ trigger:"#lake", start:"top top", end:"+=2600", scrub:.7, pin:"#lake .pin", anticipatePin:1 } });
+    tl.to(".lk-src",{ opacity:1, y:0, duration:.5 })
+      .to(pipes[0],{ strokeDashoffset:0, duration:.45 },"-=.1")
+      .to(".lk-b",{ opacity:1, y:0, duration:.45 })
+      .to(".lk-b .fill",{ attr:{opacity:.10}, duration:.5 },"-=.2")
+      .to(".lk-b .lb",{ opacity:1, duration:.35, stagger:.05 },"-=.3")
+      .to(".lk-b .cnt > *",{ opacity:1, duration:.3, stagger:.014 },"-=.2")
+      .to(pipes[1],{ strokeDashoffset:0, duration:.45 })
+      .to(".lk-s",{ opacity:1, y:0, duration:.45 },"-=.15")
+      .to(".lk-s .fill",{ attr:{opacity:.12}, duration:.5 },"-=.2")
+      .to(".lk-s .lb",{ opacity:1, duration:.35, stagger:.05 },"-=.3")
+      .to(".lk-s .cnt > *",{ opacity:1, duration:.3, stagger:.012 },"-=.2")
+      .to(pipes[2],{ strokeDashoffset:0, duration:.45 })
+      .to(".lk-g",{ opacity:1, y:0, duration:.45 },"-=.15")
+      .to(".lk-g .fill",{ attr:{opacity:.12}, duration:.5 },"-=.2")
+      .to(".lk-g .lb",{ opacity:1, duration:.35, stagger:.05 },"-=.3")
+      .to(".lk-g .cnt > *",{ opacity:1, duration:.3, stagger:.02 },"-=.2")
+      .to(pipes[3],{ strokeDashoffset:0, duration:.45 })
+      .to(".lk-serve",{ opacity:1, y:0, duration:.45 },"-=.15")
+      .to(".lk-cap",{ opacity:1, duration:.6 },"-=.05");
+    if(window.MotionPathPlugin){
+      pkts.forEach(function(pk,i){
+        G.set(pk,{ opacity:0 });
+        G.to(pk,{ duration:2.2, repeat:-1, ease:"none", delay:i*0.7, opacity:1,
+          motionPath:{ path:"#pp"+((i%4)+1), align:"#pp"+((i%4)+1) } });
+      });
+    }
+  })();
+
+  /* DECISIONS — sticky diagram sync */
+  (function(){
+    var mini=document.getElementById("miniPipe");
+    if(!mini) return;
+    G.utils.toArray(".dentry").forEach(function(en){
+      ST.create({ trigger:en, start:"top 62%", end:"bottom 62%",
+        onToggle:function(self){
+          if(self.isActive){
+            mini.setAttribute("data-active", en.getAttribute("data-stage"));
+            G.utils.toArray(".dentry").forEach(function(x){ x.classList.toggle("active", x===en); });
+          }
+        }
+      });
+    });
+  })();
+
+  /* RECORD horizontal */
+  (function(){
+    var track=document.getElementById("rTrack");
+    var dist=function(){ return track.scrollWidth - innerWidth + 120; };
+    G.to(track, { x:function(){ return -dist(); }, ease:"none",
+      scrollTrigger:{ trigger:"#record", start:"top top", end:function(){ return "+="+dist(); },
+        pin:"#record .pin", scrub:.6, anticipatePin:1, invalidateOnRefresh:true } });
+  })();
+
+  /* IMPACT count-up + magnitude bars */
+  G.utils.toArray(".ct").forEach(function(c){
+    var to=+c.getAttribute("data-to"), o={ v:0 }, cell=c.closest(".c");
+    ST.create({ trigger:(cell||c), start:"top 86%", once:true, onEnter:function(){
+      if(cell) cell.classList.add("in");
+      G.to(o,{ v:to, duration:1.2, ease:"power2.out", onUpdate:function(){ c.textContent=Math.round(o.v); } });
+    }});
+  });
+
+  /* CONTACT letters */
+  (function(){
+    var big=document.getElementById("ctBig");
+    var parts=[ {t:"Let’s move"}, {br:1}, {t:"some "}, {t:"data.", s:1} ];
+    big.innerHTML=parts.map(function(p){
+      if(p.br) return "<br>";
+      var inner=p.t.split("").map(function(ch){ return ch===" "?" ":"<span class='cl'>"+ch+"</span>"; }).join("");
+      return p.s?"<span class='s'>"+inner+"</span>":inner;
+    }).join("");
+    G.from(big.querySelectorAll(".cl"), {
+      scrollTrigger:{ trigger:"#contact", start:"top 68%" },
+      yPercent:120, opacity:0, duration:.6, ease:"expo.out", stagger:.018
+    });
+  })();
+
+  ST.refresh();
+  addEventListener("load", function(){ ST.refresh(); });
+
+  } catch(err){ revealAll(); }
+})();
+</script>
+
+</body>
+</html>
